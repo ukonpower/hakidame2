@@ -21,25 +21,9 @@ vec2 D( vec3 p ) {
 
 	// vec2 d = vec2( sdSphere( pp, 0.03 ), 0.0 );
 	float t = uTime * 0.5;
-	
-	float rot = floor( t ) + ( 1.0 - exp( fract( t ) * - 5.0 ));
-	float rot2 = floor( t * 0.5 ) + ( 1.0 - exp( fract( t * 0.5 ) * - 20.0 ));
-	
-	vec3 boxSize = vec3( 0.3 );
-	
-	for( int i = 0; i < 6; i++ ) {
 
-		pp.x = abs( pp.x );
-		pp.x -= boxSize.x * 2.0;
-		pp.xz *= rotate( rot * PI / 2.0 );
 
-		// pp.y = abs( pp.y );
-		// pp.y -= boxSize.y;
-		pp.zy *= rotate( rot * PI / 2.0 );
-
-	}
-
-	d = add( d, vec2( sdBox( pp, boxSize ), 1.0 ) );
+	d = add( d, vec2( sdSphere( pp, 1.0 ), 1.0 ) );
 	
 	return d;
 

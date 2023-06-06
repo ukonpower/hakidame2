@@ -1,16 +1,15 @@
 import * as GLP from 'glpower';
 
 import { Entity } from "~/ts/libs/framework/Entity";
-import { Content1 } from '../Entities/Content1';
+import { Content } from '../Entities/Content';
 import { DustParticles } from '../Entities/DustParticles';
-import { FluidParticles } from '../Entities/FluidParticles';
 import { Floor } from '../Entities/Floor';
 
 export const router = ( node: GLP.BLidgeNode ) => {
 
-	if ( node.name == "Content1" ) {
+	if ( node.name == "Content" ) {
 
-		return new Content1();
+		return new Content();
 
 	} else if ( node.name == "DustParticles" ) {
 
