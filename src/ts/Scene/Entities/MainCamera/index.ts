@@ -19,7 +19,7 @@ import dofBokeh from './shaders/dofBokeh.fs';
 import ssCompositeFrag from './shaders/ssComposite.fs';
 import compositeFrag from './shaders/composite.fs';
 import { LookAt } from '~/ts/libs/framework/Components/LookAt';
-import { RotateViewer } from '~/ts/libs/framework/Components/RotateViewer';
+import { ShakeViewer } from '~/ts/libs/framework/Components/ShakeViewer';
 
 export class MainCamera extends Entity {
 
@@ -100,7 +100,9 @@ export class MainCamera extends Entity {
 
 		const lookAt = this.addComponent( 'lookAt', new LookAt() );
 
-		this.addComponent( 'rotateViewer', new RotateViewer() );
+		// this.addComponent( 'rotateViewer', new RotateViewer() );
+
+		this.addComponent( 'shakeViewer', new ShakeViewer() );
 
 		// resolution
 

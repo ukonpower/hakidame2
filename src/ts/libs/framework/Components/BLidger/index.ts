@@ -100,7 +100,8 @@ export class BLidger extends Component {
 
 			} else if ( this.node.type == 'sphere' ) {
 
-				entity.addComponent( 'geometry', new SphereGeometry() );
+				const sphereParam = this.node.param as any;
+				entity.addComponent( 'geometry', new SphereGeometry( sphereParam.r ) );
 
 			}
 

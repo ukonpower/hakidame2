@@ -1,16 +1,10 @@
 import * as GLP from 'glpower';
-import { Entity, EntityResizeEvent } from '../libs/framework/Entity';
+import { Entity, EntityResizeEvent, EntityUpdateEvent } from '../libs/framework/Entity';
 import { Carpenter } from './Carpenter';
 import { Renderer } from '../libs/framework/Renderer';
 import { gl, globalUniforms, power } from '../Globals';
 
 import { MainCamera } from './Entities/MainCamera';
-import { Material } from '../libs/framework/Components/Material';
-
-
-import basicVert from './shaders/basic.vs';
-import basicFrag from './shaders/basic.fs';
-import { CubeGeometry } from '../libs/framework/Components/Geometry/CubeGeometry';
 
 
 export class Scene extends GLP.EventEmitter {
@@ -89,12 +83,14 @@ export class Scene extends GLP.EventEmitter {
 		globalUniforms.time.uTime.value = this.elapsedTime;
 		globalUniforms.time.uFractTime.value = this.elapsedTime % 1;
 
-		const renderStack = this.root.update( {
+		const event: EntityUpdateEvent = {
 			time: this.elapsedTime,
 			deltaTime: this.deltaTime,
-		} );
+		};
 
-		this.root.noticeRecursive( "sceneUpdated", this.root );
+		const renderStack = this.root.update( event );
+
+		this.root.noticeRecursive( "sceneUpdated", event, );
 
 		this.emit( "update" );
 

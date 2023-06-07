@@ -3,8 +3,9 @@
 #include <frag_h>
 
 #include <sdf>
-#include <noise4D>
+#include <noise>
 #include <rotate>
+#include <re>
 
 uniform vec3 cameraPosition;
 uniform mat4 modelMatrixInverse;
@@ -22,8 +23,11 @@ vec2 D( vec3 p ) {
 	// vec2 d = vec2( sdSphere( pp, 0.03 ), 0.0 );
 	float t = uTime * 0.5;
 
+	float radius = 0.5 + fbm(p * 0.5 + fbm3(p * 0.8 - uTime * 0.1) * 1.0 + uTime * 0.1) * 0.7;
 
-	d = add( d, vec2( sdSphere( pp, 1.0 ), 1.0 ) );
+	// radius += smoothstep( 0.3, 0.7, fbm(p * 0.5) ) *0.5;
+
+	d = add( d, vec2( sdSphere( pp, radius ), 1.0 ) );
 	
 	return d;
 
@@ -77,10 +81,26 @@ void main( void ) {
 		outEmission =  vec3( 1.0, 0.7, 0.7 ) * smoothstep( 0.0, 1.0, dot( normal, -rayDir ) );
 		
 	} 
-		
+
 	outNormal = normalize(modelMatrix * vec4( normal, 0.0 )).xyz;
 
 	if( !hit ) discard;
+
+	outColor = vec4( 0.0, 0.0, 0.0, 1.0 );
+
+	#ifdef IS_FORWARD
+
+		for( int i = 0; i < 8; i++ ) {
+
+			outColor.x += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (100.0 + float(i) * 10.0 ) ), 0 ).r;
+			outColor.y += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (130.0 + float(i) * 10.0 ) ), 0 ).g;
+			outColor.z += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (160.0 + float(i) * 10.0 ) ), 0 ).b;
+
+		}
+
+		outColor.xyz /= 8.0;
+
+	#endif
 
 	outPos = ( modelMatrix * vec4( rayPos, 1.0 ) ).xyz;
 
