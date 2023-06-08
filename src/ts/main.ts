@@ -20,7 +20,7 @@ class App {
 			<div class="text">
 				NO.${config.no}<br/>
 				TITLE:${config.title || 'None'}<br/>
-				DATE:2023/06/03<br />
+				DATE:${config.date}/<br />
 				<a href="../">../</a>
 			</div>
 		`;
