@@ -15,7 +15,7 @@ void main( void ) {
 
 	vec4 gpuPos = texture(gpuSampler0, computeUV );
 
-	outPos *= ( 0.4 + id.z * id.z ) ;
+	outPos *= ( 0.05 + id.z * id.z ) * 1.5 ;
 	outPos *= smoothstep( 1.0, 0.9, gpuPos.w);
 	outPos *= smoothstep( 0.1, 0.15, gpuPos.w);
 	outPos += gpuPos.xyz;

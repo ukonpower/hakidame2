@@ -33,7 +33,7 @@ void main( void ) {
 		snoise4D( vec4( noisePosition + 2345.6, tOffset + t ) )
 	);
 
-	noise = noise * 0.0003;
+	noise = noise * 0.0005;
 	velocity.xyz += noise;
 	// velocity.y += 0.0001;
 

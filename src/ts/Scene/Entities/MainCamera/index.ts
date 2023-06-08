@@ -27,6 +27,8 @@ export class MainCamera extends Entity {
 
 	private cameraComponent: RenderCamera;
 
+	private baseFov: number;
+
 	// common rendertarget
 
 	private rt1: GLP.GLPowerFrameBuffer;
@@ -44,7 +46,6 @@ export class MainCamera extends Entity {
 	private bloomBlur: PostProcessPass[];
 	private rtBloomVertical: GLP.GLPowerFrameBuffer[];
 	private rtBloomHorizonal: GLP.GLPowerFrameBuffer[];
-
 
 	// light shaft
 
@@ -93,14 +94,14 @@ export class MainCamera extends Entity {
 
 		super();
 
+		this.baseFov = 50.0;
+
 		// components
 
 		this.cameraComponent = this.addComponent( "camera", new RenderCamera( param ) );
 		this.addComponent( 'orbitControls', new OrbitControls( canvas ) );
 
 		const lookAt = this.addComponent( 'lookAt', new LookAt() );
-
-		// this.addComponent( 'rotateViewer', new RotateViewer() );
 
 		this.addComponent( 'shakeViewer', new ShakeViewer() );
 
@@ -404,6 +405,9 @@ export class MainCamera extends Entity {
 			lookAt.setTarget( root.getEntityByName( "CameraTarget" ) || null );
 			this.dofTarget = root.getEntityByName( 'CameraTargetDof' ) || null;
 
+			this.baseFov = this.cameraComponent.fov;
+			this.updateProjectionMatrix( this.resolution );
+
 		} );
 
 		this.on( "notice/sceneUpdated", () => {
@@ -473,7 +477,6 @@ export class MainCamera extends Entity {
 
 	protected updateImpl( event: ComponentUpdateEvent ): void {
 
-
 		// light shaft swap
 
 		let tmp = this.rtLightShaft1;
@@ -509,8 +512,7 @@ export class MainCamera extends Entity {
 		this.rt2.setSize( e.resolution );
 		this.rt3.setSize( e.resolution );
 
-		this.cameraComponent.aspect = e.resolution.x / e.resolution.y;
-		this.cameraComponent.updateProjectionMatrix();
+		this.updateProjectionMatrix( this.resolution );
 
 		let scale = 2;
 
@@ -534,6 +536,15 @@ export class MainCamera extends Entity {
 		this.rtDofCoc.setSize( resolutionHalf );
 		this.rtDofBokeh.setSize( resolutionHalf );
 		this.rtDofComposite.setSize( this.resolution );
+
+
+	}
+
+	private updateProjectionMatrix( resolution: GLP.Vector ) {
+
+		this.cameraComponent.aspect = resolution.x / resolution.y;
+		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 25.0;
+		this.cameraComponent.updateProjectionMatrix();
 
 	}
 

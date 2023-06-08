@@ -12,6 +12,7 @@ import fluidParticlesVert from './shaders/fluidParticles.vs';
 import fluidParticlesFrag from './shaders/fluidParticles.fs';
 import fluidParticlesCompute from './shaders/fluidParticlesCompute.glsl';
 import { CubeGeometry } from '~/ts/libs/framework/Components/Geometry/CubeGeometry';
+import { SphereGeometry } from '~/ts/libs/framework/Components/Geometry/SphereGeometry';
 
 export class FluidParticles extends Entity {
 
@@ -21,7 +22,7 @@ export class FluidParticles extends Entity {
 
 		super();
 
-		const count = new GLP.Vector( 100, 100 );
+		const count = new GLP.Vector( 64, 64 );
 
 		// gpu
 
@@ -66,7 +67,7 @@ export class FluidParticles extends Entity {
 
 		}
 
-		const geo = this.addComponent( "geometry", new CubeGeometry( 0.1, 0.1, 0.1 ) );
+		const geo = this.addComponent( "geometry", new SphereGeometry( 0.1, ) );
 		geo.setAttribute( "offsetPosition", new Float32Array( positionArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "computeUV", new Float32Array( computeUVArray ), 2, { instanceDivisor: 1 } );
 		geo.setAttribute( "id", new Float32Array( idArray ), 3, { instanceDivisor: 1 } );
@@ -76,7 +77,7 @@ export class FluidParticles extends Entity {
 		const mat = this.addComponent( "material", new Material( {
 			name: "fluid",
 			type: [ "deferred", 'shadowMap' ],
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.resolution, {
 				uRange: {
 					value: range,
 					type: "3f"

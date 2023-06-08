@@ -11,23 +11,17 @@ uniform vec3 cameraPosition;
 uniform mat4 modelMatrixInverse;
 uniform float uTime;
 uniform float uTimeSeq;
+uniform vec2 uResolution;
+uniform float uAspectRatio;
 
 vec2 D( vec3 p ) {
 
-	vec3 pp = p;
-
-	// pp.xz *= rotate( uTime * 0.1 );
-
 	vec2 d = vec2( 99999.0, 0.0 );
+	float n = fbm(p * 0.2 + fbm(p * 0.5 * noise( uTime + p.y * 3.0 ) - uTime * 0.1) * 1.0 + uTime * 0.1);
+	n = smoothstep( 0.15, 0.7, n );
+	float radius = 0.3 + n * 0.7;
 
-	// vec2 d = vec2( sdSphere( pp, 0.03 ), 0.0 );
-	float t = uTime * 0.5;
-
-	float radius = 0.5 + fbm(p * 0.5 + fbm3(p * 0.8 - uTime * 0.1) * 1.0 + uTime * 0.1) * 0.7;
-
-	// radius += smoothstep( 0.3, 0.7, fbm(p * 0.5) ) *0.5;
-
-	d = add( d, vec2( sdSphere( pp, radius ), 1.0 ) );
+	d = add( d, vec2( sdSphere( p, radius ), 1.0 ) );
 	
 	return d;
 
@@ -54,7 +48,7 @@ void main( void ) {
 
 	vec3 normal;
 	
-	for( int i = 0; i < 64; i++ ) { 
+	for( int i = 0; i < 32; i++ ) { 
 
 		dist = D( rayPos );		
 		rayPos += dist.x * rayDir;
@@ -90,15 +84,26 @@ void main( void ) {
 
 	#ifdef IS_FORWARD
 
-		for( int i = 0; i < 8; i++ ) {
+		vec2 uv = gl_FragCoord.xy / uResolution;
 
-			outColor.x += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (100.0 + float(i) * 10.0 ) ), 0 ).r;
-			outColor.y += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (130.0 + float(i) * 10.0 ) ), 0 ).g;
-			outColor.z += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (160.0 + float(i) * 10.0 ) ), 0 ).b;
+		for( int i = 0; i < 4; i++ ) {
+
+			vec2 v = ( normal.xy ) * ( 0.1 + ( float(i) / 4.0 ) * 0.05 );
+			v.x *= uAspectRatio;
+			outColor.x += texture( uDeferredTexture, uv + v * 1.0 ).x;
+			outColor.y += texture( uDeferredTexture, uv + v * 1.5 ).y;
+			outColor.z += texture( uDeferredTexture, uv + v * 2.0 ).z;
+
+			// outColor.x += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (100.0 + float(i) * 10.0 ) ), 0 ).r;
+			// outColor.y += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (130.0 + float(i) * 10.0 ) ), 0 ).g;
+			// outColor.z += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (160.0 + float(i) * 10.0 ) ), 0 ).b;
 
 		}
 
-		outColor.xyz /= 8.0;
+		outColor.xyz /= 4.0;
+		outColor.xyz += fresnel( dot( outNormal, -rayDir ) ) * 0.4;
+
+		// outColor.xyz = vec3( uv.xy, 0.0 );
 
 	#endif
 

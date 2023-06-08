@@ -100,6 +100,8 @@ export class Scene extends GLP.EventEmitter {
 
 	public resize( size: GLP.Vector ) {
 
+		globalUniforms.resolution.uResolution.value.copy( size );
+
 		this.root.resize( {
 			resolution: size
 		} );

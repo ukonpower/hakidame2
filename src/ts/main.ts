@@ -25,6 +25,8 @@ class App {
 			</div>
 		`;
 
+		document.title = `${config.no} | HAKIDAME`;
+
 		this.canvasWrap = document.querySelector( '.cw' )!;
 
 		this.canvas = canvas;
@@ -59,7 +61,7 @@ class App {
 
 		const canvasAspect = window.innerWidth / window.innerHeight;
 
-		const scale = canvasAspect < 1.0 ? 0.8 : 1.5;
+		const scale = canvasAspect < 1.0 ? 0.8 : 1.0;
 
 		const blkRatioX = canvasAspect < 1.0 ? 0.75 : 1.0;
 		const blkRatioY = canvasAspect < 1.0 ? 0.7 : 0.5;
