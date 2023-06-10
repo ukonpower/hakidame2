@@ -543,7 +543,7 @@ export class MainCamera extends Entity {
 	private updateProjectionMatrix( resolution: GLP.Vector ) {
 
 		this.cameraComponent.aspect = resolution.x / resolution.y;
-		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 25.0;
+		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 45.0;
 		this.cameraComponent.updateProjectionMatrix();
 
 	}

@@ -88,22 +88,16 @@ void main( void ) {
 
 		for( int i = 0; i < 4; i++ ) {
 
-			vec2 v = ( normal.xy ) * ( 0.1 + ( float(i) / 4.0 ) * 0.05 );
+			vec2 v = ( normal.xy ) * ( 0.1 + ( float(i) / 4.0 ) * 0.015 );
 			v.x *= uAspectRatio;
 			outColor.x += texture( uDeferredTexture, uv + v * 1.0 ).x;
 			outColor.y += texture( uDeferredTexture, uv + v * 1.5 ).y;
 			outColor.z += texture( uDeferredTexture, uv + v * 2.0 ).z;
 
-			// outColor.x += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (100.0 + float(i) * 10.0 ) ), 0 ).r;
-			// outColor.y += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (130.0 + float(i) * 10.0 ) ), 0 ).g;
-			// outColor.z += texelFetch( uDeferredTexture, ivec2( gl_FragCoord.xy + normal.xy * (160.0 + float(i) * 10.0 ) ), 0 ).b;
-
 		}
 
 		outColor.xyz /= 4.0;
 		outColor.xyz += fresnel( dot( outNormal, -rayDir ) ) * 0.4;
-
-		// outColor.xyz = vec3( uv.xy, 0.0 );
 
 	#endif
 
