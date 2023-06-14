@@ -1,7 +1,7 @@
 import * as GLP from 'glpower';
 import { canvas } from './Globals';
 import { Scene } from "./Scene";
-import config from '../../config';
+import config from '../../config.json';
 
 class App {
 
@@ -20,7 +20,7 @@ class App {
 			<div class="text">
 				NO.${config.no}<br/>
 				TITLE:${config.title || 'None'}<br/>
-				DATE:${config.date}/<br />
+				DATE:${config.date}<br/>
 				<a href="../">../</a>
 			</div>
 		`;
